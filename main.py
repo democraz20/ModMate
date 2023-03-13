@@ -6,11 +6,8 @@ import tkinter as tk
 # file imports
 from cli import CLI
 
-# vars
+# more like consts
 folder_name = "ModMate"
-saved_store_path = "" # path to store all mods
-mc_path = "" # minecraft's system path
-saved_config_path = "" # program's config path
 saved_profiles_name  = "Profiles" # path where all profiles are saved
 
 def main(mode):
@@ -28,17 +25,27 @@ def main(mode):
     elif mode == "cli":
         cli = CLI
         mc_path = cli.get_mc_path() #init mc_path, cannot be empty
-        saved_config_path = config_path()
-        saved_store_path = store_path()
-        print(get_all_profile())
+        saved_config_path = config_path(mc_path, folder_name)
+        saved_store_path = store_path(mc_path, folder_name)
+        print(get_all_profile(mc_path, folder_name))
+        # just testing
+        try: 
+            json = cli.select_profile(mc_path, folder_name)
+            desc = json['desc']
+            mods = json['mods']
+        except Exception as e:
+            desc = str(e).replace('\\\\', '\\')
+            mods = []
+            pass
+        print(f"{desc}, Mods: {mods}")
 
-def config_path() -> str :
+def config_path(mc_path, folder_name) -> str :
     return os.path.join(mc_path, folder_name, "config.json")
 
-def store_path() -> str :
+def store_path(mc_path, folder_name) -> str :
     return os.path.join(mc_path, folder_name, "Mods")
 
-def get_all_profile() -> list[str]:
+def get_all_profile(mc_path, folder_name) -> list[str]:
     res = []
     profiles_path = os.path.join(mc_path, folder_name, saved_profiles_name)
     for i in os.listdir(profiles_path):
