@@ -19,3 +19,24 @@ class CLI:
         with open(os.path.join(mc_path, folder_name, "Profiles", f"{i}.json"), 'r') as file:
             j = file.read().replace('\n', '')
         return json.loads(j)
+
+    def print_all_profiles(mc_path, folder_name, saved_profiles_name):
+        profiles = get_all_profile(mc_path, folder_name, saved_profiles_name)
+        print("Avaliable Profiles : ")
+
+        count = 0
+        for i in profiles:
+            count += 1
+            print(f"\'{i}\',", end="")
+            if count == 3:
+                print() 
+                count = 0
+        print("\n_________________")
+
+def get_all_profile(mc_path, folder_name, saved_profiles_name) -> list[str]:
+    res = []
+    profiles_path = os.path.join(mc_path, folder_name, saved_profiles_name)
+    for i in os.listdir(profiles_path):
+        if os.path.isfile(os.path.join(profiles_path, i)):
+            res.append(i)
+    return res
