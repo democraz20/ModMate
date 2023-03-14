@@ -1,22 +1,55 @@
 import platform
 import os
 import json
+from os import path
 
 class CLI:
+    def init_f(self, folder_name) -> str:
+        mc_path = self.get_mc_path()
+        #minecraft path doesnt exist
+        if path.exists(mc_path) != True:
+            print("Minecraft is not installed on this computer.")
+            print("please install Minecraft or make sure the path is correct.")
+            print(f"({mc_path} does not exist)")
+
+        #Modmate folder does not exist
+        if path.exists(path.join(mc_path, folder_name)) != True:
+            print("ModMate folder does not exist make one now? [y/n]")
+            i = input(">> ")
+            if i.lower == "y":
+                #create required folders
+                modmatepath = path.join(mc_path, folder_name)
+                os.mkdir(modmatepath)
+                os.mkdir(path.join(modmatepath, "Mods"))
+                os.mkdir(path.join(modmatepath, "Profiles"))
+                pass
+            else:
+                print("ModMate will not be installed, exiting")
+                exit()
+
+        #returns mc_path
+        return mc_path
     def get_mc_path() -> str :
         print("Enter Minecraft path (leave blank for default)")
         i = input(">> ")
         if platform.system() == "Windows":
             if i == "":
-                return os.path.join(os.environ["USERPROFILE"], "AppData\\Roaming\\.minecraft")
+                p = path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
+                print("Selected : ", p)
+            else:
+                p = i
         elif platform.system() == "Linux":
             if i == "":
-                return "~/.minecraft"
+                p = "~/.minecraft"
+                print("Selected : ", p)
+            else: 
+                p = i
+        return p
     # should return json object
     def select_profile(mc_path, folder_name):
         print("Enter selected profile's name")
         i = input(">> ")
-        with open(os.path.join(mc_path, folder_name, "Profiles", f"{i}.json"), 'r') as file:
+        with open(path.join(mc_path, folder_name, "Profiles", f"{i}.json"), 'r') as file:
             j = file.read().replace('\n', '')
         return json.loads(j)
 
@@ -35,8 +68,8 @@ class CLI:
 
 def get_all_profile(mc_path, folder_name, saved_profiles_name) -> list[str]:
     res = []
-    profiles_path = os.path.join(mc_path, folder_name, saved_profiles_name)
+    profiles_path = path.join(mc_path, folder_name, saved_profiles_name)
     for i in os.listdir(profiles_path):
-        if os.path.isfile(os.path.join(profiles_path, i)):
+        if path.isfile(path.join(profiles_path, i)):
             res.append(i)
     return res
