@@ -46,15 +46,15 @@ class CLI:
                 p = i
         return p
     # should return json object
-    def select_profile(mc_path, folder_name):
+    def select_profile(modmate_path):
         print("Enter selected profile's name")
         i = input(">> ")
-        with open(path.join(mc_path, folder_name, "Profiles", f"{i}.json"), 'r') as file:
+        with open(path.join(modmate_path, "Profiles", f"{i}.json"), 'r') as file:
             j = file.read().replace('\n', '')
         return json.loads(j)
 
-    def print_all_profiles(mc_path, folder_name, saved_profiles_name):
-        profiles = get_all_profile(mc_path, folder_name, saved_profiles_name)
+    def print_all_profiles(modmate_path, saved_profiles_name):
+        profiles = get_all_profile(modmate_path, saved_profiles_name)
         print("Avaliable Profiles : ")
 
         count = 0
@@ -66,9 +66,9 @@ class CLI:
                 count = 0
         print("\n_________________")
 
-def get_all_profile(mc_path, folder_name, saved_profiles_name) -> list[str]:
+def get_all_profile(modmate_path, saved_profiles_name) -> list[str]:
     res = []
-    profiles_path = path.join(mc_path, folder_name, saved_profiles_name)
+    profiles_path = path.join(modmate_path, saved_profiles_name)
     for i in os.listdir(profiles_path):
         if path.isfile(path.join(profiles_path, i)):
             res.append(i)

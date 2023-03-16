@@ -40,12 +40,13 @@ def main(mode):
             print(f"An Exception occured while init'ing \n Error : {e}")
             exit()
         # mc_path = cli.get_mc_path() #init mc_path, cannot be empty
-        saved_config_path = config_path(mc_path, folder_name)
-        saved_store_path = store_path(mc_path, folder_name)
-        cli.print_all_profiles(mc_path, folder_name, saved_profiles_name)
+        modmate_path = os.path.join(mc_path, folder_name)
+        saved_config_path = config_path(modmate_path)
+        saved_store_path = store_path(modmate_path)
+        cli.print_all_profiles(modmate_path, saved_profiles_name)
         # just testing
         try: 
-            json = cli.select_profile(mc_path, folder_name)
+            json = cli.select_profile(modmate_path)
             desc = json['desc']
             mods = json['mods']
         except Exception as e:
@@ -55,10 +56,10 @@ def main(mode):
         print(f"Profile description : {desc}")
         ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
 
-def config_path(mc_path, folder_name) -> str :
-    return os.path.join(mc_path, folder_name, "config.json")
+def config_path(modmate_path) -> str :
+    return os.path.join(modmate_path, "config.json")
 
-def store_path(mc_path, folder_name) -> str :
-    return os.path.join(mc_path, folder_name, "Mods")
+def store_path(modmate_path) -> str :
+    return os.path.join(modmate_path, "Mods")
 
 main("cli")
