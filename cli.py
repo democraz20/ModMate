@@ -59,6 +59,7 @@ class CLI:
 
         count = 0
         for i in profiles:
+            i = i.replace(".json".lower(), "")
             count += 1
             print(f"\'{i}\',", end="")
             if count == 3:

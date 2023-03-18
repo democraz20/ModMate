@@ -3,6 +3,7 @@ import os
 
 def copy_from_list(list: list[str],st , ds):
     #clear folder before
+    print('Clearing original folder ...')
     shutil.rmtree(ds)
     os.mkdir(ds)
     #here, i is just the filename

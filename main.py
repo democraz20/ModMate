@@ -1,7 +1,7 @@
 # imports
 import platform
 import os
-import tkinter as tk
+import PySimpleGUI as sg
 import ModMate
 
 # file imports
@@ -22,16 +22,7 @@ saved_profiles_name  = "Profiles" # path where all profiles are saved
 
 def main(mode):
     if mode == "gui":
-        window = tk.Tk()
-        greeting = tk.Label(
-            text="Hello World!",
-            bg="black",
-            fg="white",
-            width=100,
-            height=10,
-        )
-        greeting.pack()
-        window.mainloop()
+        sg.theme("Dark")
     elif mode == "cli":
         cli = CLI
         try:
