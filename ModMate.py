@@ -7,11 +7,11 @@ def copy_from_list(list: list[str],st , ds):
     shutil.rmtree(ds)
     os.mkdir(ds)
     #here, i is just the filename
+    err_report: list[(str, str)] = []
     for i in list:
         #should be complete path to default mods folder
         mod_path = os.path.join(st, f"{i}.jar")
         print("copied ", mod_path)
-        err_report: list[(str, str)] = []
         CRED = '\033[91m'
         CEND = '\033[0m'
         try:

@@ -22,7 +22,29 @@ saved_profiles_name  = "Profiles" # path where all profiles are saved
 
 def main(mode):
     if mode == "gui":
+        default_gray = "gray25"
+
+        layouts = [ [sg.Text(folder_name, background_color=default_gray)] ,
+                    [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray), sg.InputText()],
+                    [sg.Button("Get Profiles")]
+                    [sg.Text("Select Profile", background_color=default_gray), sg.Combo([])],
+                    [sg.Output(size=(80,10), background_color="black", text_color="white")],
+                    [sg.Button("Debug values")],
+                  ]
         sg.theme("Dark")
+
+        window = sg.Window(folder_name, layouts)
+
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED:
+                break
+            elif event == "Debug values":
+                print(values)
+            elif event == "Get Profiles":
+                pass
+                
+        window.close()
     elif mode == "cli":
         cli = CLI
         try:
@@ -53,4 +75,4 @@ def config_path(modmate_path) -> str :
 def store_path(modmate_path) -> str :
     return os.path.join(modmate_path, "Mods")
 
-main("cli")
+main("gui")
