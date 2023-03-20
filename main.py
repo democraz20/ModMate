@@ -26,9 +26,9 @@ def main(mode):
 
         layouts = [ [sg.Text(folder_name, background_color=default_gray)] ,
                     [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray), sg.InputText()],
-                    [sg.Button("Get Profiles")]
-                    [sg.Text("Select Profile", background_color=default_gray), sg.Combo([])],
-                    [sg.Output(size=(80,10), background_color="black", text_color="white")],
+                    [sg.Button("Get Profiles")],
+                    [sg.Text("Select Profile", background_color=default_gray), sg.Combo([], size=(40,1))],
+                    [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
                     [sg.Button("Debug values")],
                   ]
         sg.theme("Dark")
@@ -40,6 +40,7 @@ def main(mode):
             if event == sg.WIN_CLOSED:
                 break
             elif event == "Debug values":
+                window["output_debug"].update(visible=True)
                 print(values)
             elif event == "Get Profiles":
                 pass
@@ -54,7 +55,7 @@ def main(mode):
             exit()
         # mc_path = cli.get_mc_path() #init mc_path, cannot be empty
         modmate_path = os.path.join(mc_path, folder_name)
-        saved_config_path = config_path(modmate_path)
+        # saved_config_path = config_path(modmate_path)
         saved_store_path = store_path(modmate_path)
         cli.print_all_profiles(modmate_path, saved_profiles_name)
         # just testing
