@@ -6,6 +6,7 @@ import ModMate
 
 # file imports
 from cli import CLI
+from gui import GUI
 
 # more like consts
 folder_name = "ModMate"
@@ -27,6 +28,7 @@ def main(mode):
         layouts = [ [sg.Text(folder_name, background_color=default_gray)] ,
                     [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray), sg.InputText()],
                     [sg.Button("Get Profiles")],
+                    [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
                     [sg.Text("Select Profile", background_color=default_gray), sg.Combo([], size=(40,1))],
                     [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
                     [sg.Button("Debug values")],
@@ -35,6 +37,7 @@ def main(mode):
 
         window = sg.Window(folder_name, layouts)
 
+        gui = GUI
         while True:
             event, values = window.read()
             if event == sg.WIN_CLOSED:
@@ -43,6 +46,7 @@ def main(mode):
                 window["output_debug"].update(visible=True)
                 print(values)
             elif event == "Get Profiles":
+                gui.get_profiles(values[0])
                 pass
                 
         window.close()
