@@ -26,8 +26,8 @@ def main(mode):
         default_gray = "gray25"
 
         layouts = [ [sg.Text(folder_name, background_color=default_gray)] ,
-                    [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray), sg.InputText()],
-                    [sg.Button("Get Profiles")],
+                    [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray)],
+                    [sg.InputText(key="mcpathinput"), sg.Button("Get Profiles")],
                     [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
                     [sg.Text("Select Profile", background_color=default_gray), sg.Combo([], size=(40,1))],
                     [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
@@ -46,7 +46,38 @@ def main(mode):
                 window["output_debug"].update(visible=True)
                 print(values)
             elif event == "Get Profiles":
-                gui.get_profiles(values[0])
+                if values["mcpathinput"] == "":
+                    import platform
+                    #init mc path
+                    plat = platform.system()
+                    if plat == "Windows":
+                        values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
+                    elif plat == "Linux":
+                        values["mcpathinput"] = "~/.minecraft"
+                
+                print(values)
+                
+                if gui.validate_mcpath(values["mcpathinput"]) == False:
+                    sg.popup_auto_close(
+                        "Minecraft folder not detected, install minecraft or try a correct path",
+                        auto_close=False
+                        )
+                    pass
+                else:
+                    if gui.validate_modmate(values["mcpathinput"], folder_name) == False:
+                        ch = sg.popup_yes_no("ModMate folder not found, create now?")
+                        if ch == "Yes":
+                            # call init folder
+                            pass
+                        else:
+                            window["ErrorDisplay"].update(
+                                "ModMate folder not found",
+                                visible=True,
+                                text_color="Red"
+                                )
+                    pass
+                gui.get_profiles(values["mcpathinput"])
+                #init
                 pass
                 
         window.close()
