@@ -24,14 +24,22 @@ saved_profiles_name  = "Profiles" # path where all profiles are saved
 def main(mode):
     if mode == "gui":
         default_gray = "gray25"
+        second_gray = "gray30"
 
-        layouts = [ [sg.Text(folder_name, background_color=default_gray)] ,
-                    [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray)],
-                    [sg.InputText(key="mcpathinput"), sg.Button("Get Profiles")],
-                    [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
-                    [sg.Text("Select Profile", background_color=default_gray), sg.Combo([], size=(40,1))],
-                    [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
-                    [sg.Button("Debug values")],
+        layouts = [ 
+            [sg.Text(folder_name, background_color=default_gray)] ,
+            [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray)],
+            [
+                sg.InputText(key="mcpathinput", background_color=second_gray, text_color="White"), 
+                sg.Button("Get Profiles")
+            ],
+            [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
+            [
+                sg.Text("Select Profile", background_color=default_gray),
+                sg.Combo([], size=(40,1), background_color=second_gray, text_color="White", key="profileselector")
+            ],
+            [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
+            [sg.Button("Debug values")],
                   ]
         sg.theme("Dark")
 
@@ -48,26 +56,25 @@ def main(mode):
             elif event == "Get Profiles":
                 if values["mcpathinput"] == "":
                     import platform
-                    #init mc path
                     plat = platform.system()
+                    #init mc path
                     if plat == "Windows":
                         values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
                     elif plat == "Linux":
                         values["mcpathinput"] = "~/.minecraft"
                 
                 print(values)
-                
-                if gui.validate_mcpath(values["mcpathinput"]) == False:
-                    sg.popup_auto_close(
-                        "Minecraft folder not detected, install minecraft or try a correct path",
-                        auto_close=False
-                        )
-                    pass
-                else:
+                mcpath_exist = gui.validate_mcpath(values["mcpathinput"])
+                print("mcpathexist ",mcpath_exist)
+
+
+                if mcpath_exist == True:
+                    a = True
                     if gui.validate_modmate(values["mcpathinput"], folder_name) == False:
                         ch = sg.popup_yes_no("ModMate folder not found, create now?")
                         if ch == "Yes":
                             # call init folder
+                            gui.init_modmate(values["mcpathinput"], folder_name)
                             pass
                         else:
                             window["ErrorDisplay"].update(
@@ -75,11 +82,24 @@ def main(mode):
                                 visible=True,
                                 text_color="Red"
                                 )
-                    pass
-                gui.get_profiles(values["mcpathinput"])
+                else:
+                    sg.popup_auto_close(
+                        "Minecraft folder not detected, install minecraft or try a correct path",
+                        auto_close=False
+                        )
+                    import platform
+                    plat = platform.system()
+                    #init mc path
+                    if plat == "Windows":
+                        values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
+                    elif plat == "Linux":
+                        values["mcpathinput"] = "~/.minecraft" 
+
+                #still error prone here, will fix later     
+                profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
+                window["profileselector"].update(values=profiles)
+                print(profiles)
                 #init
-                pass
-                
         window.close()
     elif mode == "cli":
         cli = CLI
