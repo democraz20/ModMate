@@ -53,7 +53,10 @@ def main(mode):
             elif event == "Debug values":
                 window["output_debug"].update(visible=True)
                 print(values)
+
+            #first 
             elif event == "Get Profiles":
+                #means use default
                 if values["mcpathinput"] == "":
                     import platform
                     plat = platform.system()
@@ -62,14 +65,16 @@ def main(mode):
                         values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
                     elif plat == "Linux":
                         values["mcpathinput"] = "~/.minecraft"
+                    #assume it is now valid , will check later
                 
                 print(values)
                 mcpath_exist = gui.validate_mcpath(values["mcpathinput"])
                 print("mcpathexist ",mcpath_exist)
 
-
+                #minecraft exists
                 if mcpath_exist == True:
                     a = True
+                    #Modmate does not exist
                     if gui.validate_modmate(values["mcpathinput"], folder_name) == False:
                         ch = sg.popup_yes_no("ModMate folder not found, create now?")
                         if ch == "Yes":
@@ -82,23 +87,23 @@ def main(mode):
                                 visible=True,
                                 text_color="Red"
                                 )
-                else:
+                    #Everything goes right
+                    else: 
+                        profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
+                        window["mcpathinput"].update(default_text=values["mcpathinput"])
+                        window["profileselector"].update(values=profiles)
+
+                        print(profiles)
+                else: #minecraft does not exists, 
                     sg.popup_auto_close(
                         "Minecraft folder not detected, install minecraft or try a correct path",
                         auto_close=False
                         )
-                    import platform
-                    plat = platform.system()
-                    #init mc path
-                    if plat == "Windows":
-                        values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
-                    elif plat == "Linux":
-                        values["mcpathinput"] = "~/.minecraft" 
+                    window["ErrorDisplay"].update("Minecraft path does not exist", visible=True, text_color="Red")
+                    window["profileselector"].update(values=[])
+                    #do nothing after
 
-                #still error prone here, will fix later     
-                profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
-                window["profileselector"].update(values=profiles)
-                print(profiles)
+
                 #init
         window.close()
     elif mode == "cli":
