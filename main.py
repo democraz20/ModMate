@@ -30,27 +30,28 @@ def main(mode):
             [sg.Text(folder_name, background_color=default_gray)] ,
             [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray)],
             [
-                sg.InputText(key="mcpathinput", background_color=second_gray, text_color="White"), 
-                sg.Button("Get Profiles")
+                sg.InputText(key="mcpathinput", background_color=second_gray, text_color="White", expand_x=True), 
+                sg.Button("Get Profiles", expand_x=True)
             ],
             [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
             [
                 sg.Text("Select Profile", background_color=default_gray),
-                sg.Combo([], size=(40,1), background_color=second_gray, text_color="White", key="profileselector")
+                sg.Combo([], size=(40,1), background_color=second_gray, text_color="White", key="profileselector", expand_x=True)
             ],
-            [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False)],
-            [sg.Button("Debug values")],
-                  ]
+            [sg.Button("Start", key="startcopy",visible=False , expand_x=True)]
+            [sg.Button("Debug window")],
+            [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False, expand_x=True, expand_y=True)],
+            ]
         sg.theme("Dark")
 
-        window = sg.Window(folder_name, layouts)
+        window = sg.Window(folder_name, layouts, resizable=True)
 
         gui = GUI
         while True:
             event, values = window.read()
             if event == sg.WIN_CLOSED:
                 break
-            elif event == "Debug values":
+            elif event == "Debug window":
                 window["output_debug"].update(visible=True)
                 print(values)
 
@@ -90,7 +91,7 @@ def main(mode):
                     #Everything goes right
                     else: 
                         profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
-                        window["mcpathinput"].update(default_text=values["mcpathinput"])
+                        # window["mcpathinput"].update(default_text=values["mcpathinput"]) #shits bricks
                         window["profileselector"].update(values=profiles)
 
                         print(profiles)
