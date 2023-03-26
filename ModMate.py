@@ -1,7 +1,7 @@
 import shutil
 import os
 
-def copy_from_list(list: list[str],st , ds):
+def copy_from_list(list: list[str],st , ds) -> list[(str, str)]:
     #clear folder before
     print('Clearing original folder ...')
     shutil.rmtree(ds)
@@ -29,3 +29,4 @@ def copy_from_list(list: list[str],st , ds):
         print("error report :")
         for (name, reason) in err_report:
             print(CRED, f"{name} failed, {reason}", CEND)
+    return err_report

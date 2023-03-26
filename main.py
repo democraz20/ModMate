@@ -93,7 +93,7 @@ def main(mode):
                         profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
                         # window["mcpathinput"].update(default_text=values["mcpathinput"]) #shits bricks
                         window["profileselector"].update(values=profiles)
-
+                        window["startcopy"].update(visible=True)
                         print(profiles)
                 else: #minecraft does not exists, 
                     sg.popup_auto_close(
@@ -104,7 +104,11 @@ def main(mode):
                     window["profileselector"].update(values=[])
                     #do nothing after
 
-
+            elif event == "Start":
+                #open file
+                #get list
+                #start copying
+                pass
                 #init
         window.close()
     elif mode == "cli":

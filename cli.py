@@ -46,6 +46,7 @@ class CLI:
                 p = i
         return p
     # should return json object
+        pass
     def select_profile(modmate_path):
         print("Enter selected profile's name")
         i = input(">> ")
