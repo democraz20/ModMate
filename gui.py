@@ -31,6 +31,10 @@ class GUI:
             r=((mods, desc), (None, None))
             return r
         except Exception as e:
+            #could have a thing where it matchs the error message then 
+            #provide a more user-friendly error message back instead
+            #such as file not found to profile not found
+            #or do it at the main function
             r=((None, None), ("Exception", str(e)))
             return r
 

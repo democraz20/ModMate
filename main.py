@@ -107,6 +107,18 @@ def main(mode):
             elif event == "Start":
                 #open file
                 #get list
+                #get_mod_list handles above
+                ((modlist, desc), (err, errdesc)) = gui.get_mod_list(modmate_path, window["profileselector"])
+                if err != None:
+                    #error occured
+                    window["ErrorDisplay"].update(
+                        f"{err} occured, {errdesc}",
+                        visible=True,
+                        text_color="Red"
+                    )
+                    #everything went fine
+                    pass
+                else:
                 #start copying
                 pass
                 #init
