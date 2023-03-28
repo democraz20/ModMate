@@ -25,6 +25,8 @@ def main(mode):
     if mode == "gui":
         default_gray = "gray25"
         second_gray = "gray30"
+        
+        mc_path = ""
 
         layouts = [ 
             [sg.Text(folder_name, background_color=default_gray)] ,
@@ -38,7 +40,7 @@ def main(mode):
                 sg.Text("Select Profile", background_color=default_gray),
                 sg.Combo([], size=(40,1), background_color=second_gray, text_color="White", key="profileselector", expand_x=True)
             ],
-            [sg.Button("Start", key="startcopy",visible=False , expand_x=True)]
+            [sg.Button("Start", key="startcopy",visible=False , expand_x=True)],
             [sg.Button("Debug window")],
             [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False, expand_x=True, expand_y=True)],
             ]
@@ -49,6 +51,7 @@ def main(mode):
         gui = GUI
         while True:
             event, values = window.read()
+            print(event)
             if event == sg.WIN_CLOSED:
                 break
             elif event == "Debug window":
@@ -66,6 +69,7 @@ def main(mode):
                         values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
                     elif plat == "Linux":
                         values["mcpathinput"] = "~/.minecraft"
+                    mc_path = values["mcpathinput"]
                     #assume it is now valid , will check later
                 
                 print(values)
@@ -104,22 +108,30 @@ def main(mode):
                     window["profileselector"].update(values=[])
                     #do nothing after
 
-            elif event == "Start":
+            elif event == "startcopy":
+                print("Event start copy")
                 #open file
                 #get list
                 #get_mod_list handles above
-                ((modlist, desc), (err, errdesc)) = gui.get_mod_list(modmate_path, window["profileselector"])
+                modmate_path = os.path.join(mc_path, folder_name)
+                ((modlist, desc), (err, errdesc)) = gui.get_mod_list(modmate_path, values["profileselector"])
                 if err != None:
+                    print("An error occured")
                     #error occured
                     window["ErrorDisplay"].update(
                         f"{err} occured, {errdesc}",
                         visible=True,
                         text_color="Red"
                     )
-                    #everything went fine
-                    pass
                 else:
-                #start copying
+                    print("No errors, proceeding with copying")
+                    #everything went fine
+                    #start copying
+                    mods = modlist
+                    profiledesc = desc
+                    saved_store_path = store_path(modmate_path)
+                    ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
+                    pass
                 pass
                 #init
         window.close()

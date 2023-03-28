@@ -23,13 +23,13 @@ class GUI:
         if profile == "":
             r=((None, None), ("Exception", "Profile name is empty!"))
         try:
-            with open(os.path.join(modmate_path, "Profiles", "{profile}.json")) as file:
+            with open(os.path.join(modmate_path, "Profiles", f"{profile}.json")) as file:
                 j = file.read().replace('\n', '')
-                json = json.loads(j)
-            desc = json['desc']
-            mods = json['mods']
-            r=((mods, desc), (None, None))
-            return r
+                js = json.loads(j)
+                desc = js['desc']
+                mods = js['mods']
+                r=((mods, desc), (None, None))
+                return r
         except Exception as e:
             #could have a thing where it matchs the error message then 
             #provide a more user-friendly error message back instead
