@@ -131,6 +131,7 @@ def main(mode):
                     profiledesc = desc
                     saved_store_path = store_path(modmate_path)
                     ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
+                    window["ErrorDisplay"].update("Task finished with no errors", visible=True, text_color="Green")
                     pass
                 pass
                 #init
