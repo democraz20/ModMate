@@ -22,6 +22,7 @@ class GUI:
     def get_mod_list(modmate_path, profile) -> tuple[tuple[list[str], str], tuple[str, str]]:
         if profile == "":
             r=((None, None), ("Exception", "Profile name is empty!"))
+            return r
         try:
             with open(os.path.join(modmate_path, "Profiles", f"{profile}.json")) as file:
                 j = file.read().replace('\n', '')
@@ -31,11 +32,15 @@ class GUI:
                 r=((mods, desc), (None, None))
                 return r
         except Exception as e:
+            emsg = str(e)
+            ret = str(e)
+            if "No such file or directory" in emsg:
+                ret = f"Error: Profile '{profile}' not found"
             #could have a thing where it matchs the error message then 
             #provide a more user-friendly error message back instead
             #such as file not found to profile not found
             #or do it at the main function
-            r=((None, None), ("Exception", str(e)))
+            r=((None, None), ("Exception", ret))
             return r
 
     def get_profiles(mc_path, foldername, saved_profiles_name) -> list[str]:
