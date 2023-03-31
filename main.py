@@ -130,8 +130,11 @@ def main(mode):
                     mods = modlist
                     profiledesc = desc
                     saved_store_path = store_path(modmate_path)
-                    ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
-                    window["ErrorDisplay"].update("Task finished with no errors", visible=True, text_color="Green")
+                    errorreport = ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
+                    if len(errorreport) == 0:
+                        window["ErrorDisplay"].update("Task finished with no errors", visible=True, text_color="Green")
+                    else:
+                        window["ErrorDisplay"].update("Error occured while copying, check debug window for more info", visible=True, text_color="Red")
                     pass
                 pass
                 #init
