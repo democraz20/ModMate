@@ -10,7 +10,7 @@ from gui import GUI
 
 # more like consts
 folder_name = "ModMate"
-saved_profiles_name  = "Profiles" # path where all profiles are saved
+saved_profiles_name = "Profiles"  # path where all profiles are saved
 
 # .minecraft/
 # ├─ Modmate/ #folder name
@@ -25,25 +25,59 @@ def main(mode):
     if mode == "gui":
         default_gray = "gray25"
         second_gray = "gray30"
-        
+
         mc_path = ""
 
-        layouts = [ 
-            [sg.Text(folder_name, background_color=default_gray)] ,
-            [sg.Text("Enter Minecraft path (leave blank for default)", background_color=default_gray)],
+        layouts = [
+            [sg.Text(folder_name, background_color=default_gray)],
             [
-                sg.InputText(key="mcpathinput", background_color=second_gray, text_color="White", expand_x=True), 
-                sg.Button("Get Profiles", expand_x=True)
+                sg.Text(
+                    "Enter Minecraft path (leave blank for default)",
+                    background_color=default_gray,
+                )
             ],
-            [sg.Text("Error PlaceHolder", background_color=default_gray, key="ErrorDisplay", visible=False)],
+            [
+                sg.InputText(
+                    key="mcpathinput",
+                    background_color=second_gray,
+                    text_color="White",
+                    expand_x=True,
+                ),
+                sg.Button("Get Profiles", expand_x=True),
+            ],
+            [
+                sg.Text(
+                    "Error PlaceHolder",
+                    background_color=default_gray,
+                    key="ErrorDisplay",
+                    visible=False,
+                )
+            ],
             [
                 sg.Text("Select Profile", background_color=default_gray),
-                sg.Combo([], size=(40,1), background_color=second_gray, text_color="White", key="profileselector", expand_x=True)
+                sg.Combo(
+                    [],
+                    size=(40, 1),
+                    background_color=second_gray,
+                    text_color="White",
+                    key="profileselector",
+                    expand_x=True,
+                ),
             ],
-            [sg.Button("Start", key="startcopy",visible=False , expand_x=True)],
+            [sg.Button("Start", key="startcopy", visible=False, expand_x=True)],
             [sg.Button("Debug window")],
-            [sg.Output(size=(80,10), background_color="black", text_color="white", key="output_debug", visible=False, expand_x=True, expand_y=True)],
-            ]
+            [
+                sg.Output(
+                    size=(80, 10),
+                    background_color="black",
+                    text_color="white",
+                    key="output_debug",
+                    visible=False,
+                    expand_x=True,
+                    expand_y=True,
+                )
+            ],
+        ]
         sg.theme("Dark")
 
         window = sg.Window(folder_name, layouts, resizable=True)
@@ -58,29 +92,38 @@ def main(mode):
                 window["output_debug"].update(visible=True)
                 print(values)
 
-            #first 
+            # first
             elif event == "Get Profiles":
-                #means use default
+                # means use default
                 if values["mcpathinput"] == "":
                     import platform
+
                     plat = platform.system()
-                    #init mc path
+                    # init mc path
                     if plat == "Windows":
-                        values["mcpathinput"] = os.path.join(os.environ["USERPROFILE"], "AppData","Roaming",".minecraft")
+                        values["mcpathinput"] = os.path.join(
+                            os.environ["USERPROFILE"],
+                            "AppData",
+                            "Roaming",
+                            ".minecraft",
+                        )
                     elif plat == "Linux":
                         values["mcpathinput"] = "~/.minecraft"
                     mc_path = values["mcpathinput"]
-                    #assume it is now valid , will check later
-                
+                    # assume it is now valid , will check later
+
                 print(values)
                 mcpath_exist = gui.validate_mcpath(values["mcpathinput"])
-                print("mcpathexist ",mcpath_exist)
+                print("mcpathexist ", mcpath_exist)
 
-                #minecraft exists
+                # minecraft exists
                 if mcpath_exist == True:
                     a = True
-                    #Modmate does not exist
-                    if gui.validate_modmate(values["mcpathinput"], folder_name) == False:
+                    # Modmate does not exist
+                    if (
+                        gui.validate_modmate(values["mcpathinput"], folder_name)
+                        == False
+                    ):
                         ch = sg.popup_yes_no("ModMate folder not found, create now?")
                         if ch == "Yes":
                             # call init folder
@@ -90,54 +133,68 @@ def main(mode):
                             window["ErrorDisplay"].update(
                                 "ModMate folder not found",
                                 visible=True,
-                                text_color="Red"
-                                )
-                    #Everything goes right
-                    else: 
-                        profiles = gui.get_profiles(values["mcpathinput"], folder_name, saved_profiles_name)
+                                text_color="Red",
+                            )
+                    # Everything goes right
+                    else:
+                        profiles = gui.get_profiles(
+                            values["mcpathinput"], folder_name, saved_profiles_name
+                        )
                         # window["mcpathinput"].update(default_text=values["mcpathinput"]) #shits bricks
                         window["profileselector"].update(values=profiles)
                         window["startcopy"].update(visible=True)
                         print(profiles)
-                else: #minecraft does not exists, 
+                else:  # minecraft does not exists,
                     sg.popup_auto_close(
                         "Minecraft folder not detected, install minecraft or try a correct path",
-                        auto_close=False
-                        )
-                    window["ErrorDisplay"].update("Minecraft path does not exist", visible=True, text_color="Red")
+                        auto_close=False,
+                    )
+                    window["ErrorDisplay"].update(
+                        "Minecraft path does not exist", visible=True, text_color="Red"
+                    )
                     window["profileselector"].update(values=[])
-                    #do nothing after
+                    # do nothing after
 
             elif event == "startcopy":
                 print("Event start copy")
-                #open file
-                #get list
-                #get_mod_list handles above
+                # open file
+                # get list
+                # get_mod_list handles above
                 modmate_path = os.path.join(mc_path, folder_name)
-                ((modlist, desc), (err, errdesc)) = gui.get_mod_list(modmate_path, values["profileselector"])
+                ((modlist, desc), (err, errdesc)) = gui.get_mod_list(
+                    modmate_path, values["profileselector"]
+                )
                 if err != None:
                     print("An error occured")
-                    #error occured
+                    # error occured
                     window["ErrorDisplay"].update(
-                        f"{err} occured, {errdesc}",
-                        visible=True,
-                        text_color="Red"
+                        f"{err} occured, {errdesc}", visible=True, text_color="Red"
                     )
                 else:
                     print("No errors, proceeding with copying")
-                    #everything went fine
-                    #start copying
+                    # everything went fine
+                    # start copying
                     mods = modlist
                     profiledesc = desc
                     saved_store_path = store_path(modmate_path)
-                    errorreport = ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
+                    errorreport = ModMate.copy_from_list(
+                        mods, saved_store_path, os.path.join(mc_path, "Mods")
+                    )
                     if len(errorreport) == 0:
-                        window["ErrorDisplay"].update("Task finished with no errors", visible=True, text_color="Green")
+                        window["ErrorDisplay"].update(
+                            "Task finished with no errors",
+                            visible=True,
+                            text_color="Green",
+                        )
                     else:
-                        window["ErrorDisplay"].update("Error occured while copying, check debug window for more info", visible=True, text_color="Red")
+                        window["ErrorDisplay"].update(
+                            "Error occured while copying, check debug window for more info",
+                            visible=True,
+                            text_color="Red",
+                        )
                     pass
                 pass
-                #init
+                # init
         window.close()
     elif mode == "cli":
         cli = CLI
@@ -152,21 +209,24 @@ def main(mode):
         saved_store_path = store_path(modmate_path)
         cli.print_all_profiles(modmate_path, saved_profiles_name)
         # just testing
-        try: 
+        try:
             json = cli.select_profile(modmate_path)
-            desc = json['desc']
-            mods = json['mods']
+            desc = json["desc"]
+            mods = json["mods"]
         except Exception as e:
-            desc = str(e).replace('\\\\', '\\')
+            desc = str(e).replace("\\\\", "\\")
             mods = []
             pass
         print(f"Profile description : {desc}")
         ModMate.copy_from_list(mods, saved_store_path, os.path.join(mc_path, "Mods"))
 
-def config_path(modmate_path) -> str :
+
+def config_path(modmate_path) -> str:
     return os.path.join(modmate_path, "config.json")
 
-def store_path(modmate_path) -> str :
+
+def store_path(modmate_path) -> str:
     return os.path.join(modmate_path, "Mods")
+
 
 main("gui")
