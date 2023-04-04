@@ -1,0 +1,9 @@
+{
+    "mode": "gui",
+    "gui": {
+        "autostart_debug": false
+    },
+    "cli": {
+        
+    }
+}
