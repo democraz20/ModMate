@@ -4,6 +4,6 @@
         "autostart_debug": false
     },
     "cli": {
-        
+        "autostart_debug": false
     }
 }
