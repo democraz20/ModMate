@@ -23,6 +23,7 @@ saved_profiles_name = "Profiles"  # path where all profiles are saved
 
 def main(mode):
     if mode == "gui":
+
         default_gray = "gray25"
         second_gray = "gray30"
 
@@ -64,8 +65,10 @@ def main(mode):
                     expand_x=True,
                 ),
             ],
-            [sg.Button("Start", key="startcopy", visible=False, expand_x=True)],
-            [sg.Button("Debug window")],
+            [
+                sg.Button("Start", key="startcopy", visible=False, expand_x=True)
+            ],
+            # [sg.Button("Debug window", key="debugwindow")],
             [
                 sg.Output(
                     size=(80, 10),
@@ -78,18 +81,25 @@ def main(mode):
                 )
             ],
         ]
-        sg.theme("Dark")
 
-        window = sg.Window(folder_name, layouts, resizable=True)
+        sg.theme("Dark")
+        window = sg.Window(folder_name, layouts,return_keyboard_events=True, resizable=True)
 
         gui = GUI
+        d = False
+
+
         while True:
             event, values = window.read()
-            print(event)
+            # print(event)
             if event == sg.WIN_CLOSED:
                 break
-            elif event == "Debug window":
-                window["output_debug"].update(visible=True)
+            elif event == "d:68":
+                if d != True:
+                    window["output_debug"].update(visible=True)
+                    d = True
+                else: 
+                    window["output_debug"].update(visible=False)
                 print(values)
 
             # first
@@ -196,6 +206,11 @@ def main(mode):
                 pass
                 # init
         window.close()
+
+
+#------------------------------------------------------------#
+
+
     elif mode == "cli":
         cli = CLI
         try:
