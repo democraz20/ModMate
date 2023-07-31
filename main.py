@@ -66,7 +66,8 @@ def main(mode):
                 ),
             ],
             [
-                sg.Button("Start", key="startcopy", visible=False, expand_x=True)
+                sg.Button("Profiles Editor", key="peditor", visible=False),
+                sg.Button("Start", key="startcopy", visible=False, expand_x=True,)
             ],
             # [sg.Button("Debug window", key="debugwindow")],
             [
@@ -152,6 +153,7 @@ def main(mode):
                         )
                         # window["mcpathinput"].update(default_text=values["mcpathinput"]) #shits bricks
                         window["profileselector"].update(values=profiles)
+                        window["peditor"].update(visible=True)
                         window["startcopy"].update(visible=True)
                         print(profiles)
                 else:  # minecraft does not exists,

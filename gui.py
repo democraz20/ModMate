@@ -51,3 +51,7 @@ class GUI:
             if os.path.isfile(os.path.join(profiles_path, i)):
                 res.append(i.replace(".json", ""))
         return res
+    
+class Editor:
+    def window(profiles):
+        editor_layout = []
