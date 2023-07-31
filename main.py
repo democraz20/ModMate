@@ -4,10 +4,6 @@ import os
 import PySimpleGUI as sg
 import ModMate
 
-# file imports
-from cli import CLI
-from gui import GUI
-
 # more like consts
 folder_name = "ModMate"
 saved_profiles_name = "Profiles"  # path where all profiles are saved
@@ -23,6 +19,7 @@ saved_profiles_name = "Profiles"  # path where all profiles are saved
 
 def main(mode):
     if mode == "gui":
+        from gui import GUI, Editor
 
         default_gray = "gray25"
         second_gray = "gray30"
@@ -89,6 +86,7 @@ def main(mode):
         gui = GUI
         d = False
 
+        current_profiles = []
 
         while True:
             event, values = window.read()
@@ -101,6 +99,7 @@ def main(mode):
                     d = True
                 else: 
                     window["output_debug"].update(visible=False)
+                    d = False
                 print(values)
 
             # first
@@ -156,6 +155,7 @@ def main(mode):
                         window["peditor"].update(visible=True)
                         window["startcopy"].update(visible=True)
                         print(profiles)
+                        current_profiles = profiles.copy()
                 else:  # minecraft does not exists,
                     sg.popup_auto_close(
                         "Minecraft folder not detected, install minecraft or try a correct path",
@@ -206,6 +206,10 @@ def main(mode):
                         )
                     pass
                 pass
+            elif event == "peditor":
+                editor = Editor
+                editor.window(current_profiles)
+                pass
                 # init
         window.close()
 
@@ -214,6 +218,8 @@ def main(mode):
 
 
     elif mode == "cli":
+        from cli import CLI
+
         cli = CLI
         try:
             mc_path = cli.init_f(cli, folder_name)
