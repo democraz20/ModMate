@@ -59,7 +59,12 @@ class GUI:
 
 
 class Editor:
-    def window(profiles: list[str]):
+    #path : (modmate path, saved profiles name, store path)
+    def window(profiles: list[str], paths: (str, str, str)):
+        Modmatepath = paths[0]
+        saved_profiles_path = paths[1]
+        store_path = paths[2]
+
         default_gray = "gray25"
         second_gray = "gray30"
 
@@ -103,6 +108,12 @@ class Editor:
                 sg.Button("+", key="newprofile", size=(2, 1))
             ],
             [
+                sg.Text(
+                    "Error PlaceHolder",
+                    key="ErrorDisplay"
+                )
+            ],
+            [
                 sg.Column(
                     column_layout,
                     size=(50, 10),
@@ -133,6 +144,14 @@ class Editor:
                     #error : profile already exists
                     pass
                 #make new profile
+                try:
+                    newfilepath = os.path.join(saved_profiles_path, values['profileselector'])
+                    print(newfilepath)
+                    # fp = open(f"{newfilepath}.json", "w")
+                    pass
+                except Exception as e:
+                    #error
+                    continue #dont jump to profile editor
                 #jump to profile editor
                 pass
 

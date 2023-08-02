@@ -64,7 +64,7 @@ def main(mode):
             ],
             [
                 sg.Button("Profiles Editor", key="peditor", visible=False),
-                sg.Button("Start", key="startcopy", visible=False, expand_x=True,)
+                sg.Button("Start", key="startcopy", visible=False, expand_x=True)
             ],
             # [sg.Button("Debug window", key="debugwindow")],
             [
@@ -208,7 +208,7 @@ def main(mode):
                 pass
             elif event == "peditor":
                 editor = Editor
-                editor.window(current_profiles)
+                editor.window(current_profiles, ("a", "b", "c"))
                 pass
                 # init
         window.close()
